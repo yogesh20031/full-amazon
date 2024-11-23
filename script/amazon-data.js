@@ -1,4 +1,3 @@
-
 let productHtml = "";
 products.forEach((product) => {
   productHtml += `<div class="product-container">
@@ -45,10 +44,35 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${
+            product.id
+          }">
             Add to Cart
           </button>
         </div>`;
 });
 
-document.querySelector(".products-grid").innerHTML=`${productHtml}`
+document.querySelector(".products-grid").innerHTML = `${productHtml}`;
+let cartCount = 0;
+document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+  button.addEventListener("click", () => {
+    
+    const productId = button.dataset.productId;
+    let checkItemPresence = false;
+    cart.forEach((item) => {
+      if (item.productId === productId) {
+        item.quantity++;
+        checkItemPresence = true;
+      }
+    });
+    if (!checkItemPresence) {
+      cartCount++;
+      document.querySelector(".cart-quantity").innerHTML = cartCount;
+      cart.push({
+        productId: productId,
+        quantity: 1,
+      });
+    }
+    console.log(cart);
+  });
+});
