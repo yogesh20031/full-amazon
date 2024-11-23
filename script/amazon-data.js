@@ -1,3 +1,5 @@
+import { cart } from "../data/cart.js";
+
 let productHtml = "";
 products.forEach((product) => {
   productHtml += `<div class="product-container">
@@ -56,17 +58,24 @@ document.querySelector(".products-grid").innerHTML = `${productHtml}`;
 let cartCount = 0;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
+    let setTime = clearTimeout();
+    const productContainer = button.closest(".product-container");
+    const addedToCartElement = productContainer.querySelector(".added-to-cart");
+    addedToCartElement.classList.add("added-to-cart-opacity");
+    setTime = setTimeout(() => {
+      addedToCartElement.classList.remove("added-to-cart-opacity");
+    }, 2000);
     const productId = button.dataset.productId;
-    let cartCountValue = parseInt(document.querySelector(
-      `.js-quantity-selector-${productId}`
-    ).value);
-    cartCount+=cartCountValue;
+    let cartCountValue = parseInt(
+      document.querySelector(`.js-quantity-selector-${productId}`).value
+    );
+    cartCount += cartCountValue;
     document.querySelector(".cart-quantity").innerHTML = cartCount;
 
     let checkItemPresence = false;
     cart.forEach((item) => {
       if (item.productId === productId) {
-        item.quantity+=cartCountValue;
+        item.quantity += cartCountValue;
         checkItemPresence = true;
       }
     });
