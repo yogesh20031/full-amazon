@@ -23,7 +23,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-quantity-selector-${product.id}">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -56,22 +56,26 @@ document.querySelector(".products-grid").innerHTML = `${productHtml}`;
 let cartCount = 0;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
-    cartCount++;
-    document.querySelector(".cart-quantity").innerHTML = cartCount;
     const productId = button.dataset.productId;
+    let cartCountValue = parseInt(document.querySelector(
+      `.js-quantity-selector-${productId}`
+    ).value);
+    cartCount+=cartCountValue;
+    document.querySelector(".cart-quantity").innerHTML = cartCount;
+
     let checkItemPresence = false;
     cart.forEach((item) => {
       if (item.productId === productId) {
-        item.quantity++;
+        item.quantity+=cartCountValue;
         checkItemPresence = true;
       }
     });
     if (!checkItemPresence) {
-     
       cart.push({
         productId: productId,
-        quantity: 1,
+        quantity: cartCountValue,
       });
     }
+    console.log(cart);
   });
 });
