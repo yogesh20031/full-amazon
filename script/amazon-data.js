@@ -72,9 +72,9 @@ function addToCartFun(productId) {
   document.querySelector(".cart-quantity").innerHTML = cartCount;
 
   let checkItemPresence = false;
-  cart.forEach((item) => {
-    if (item.productId === productId) {
-      item.quantity += cartCountValue;
+  cart.forEach((cartItem) => {
+    if (cartItem.productId === productId) {
+      cartItem.quantity += cartCountValue;
       checkItemPresence = true;
     }
   });
