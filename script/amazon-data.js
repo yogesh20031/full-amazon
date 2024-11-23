@@ -1,4 +1,4 @@
-import { cart } from "../data/cart.js";
+import { cart, saveCartItemInLocal } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
 let productHtml = "";
@@ -22,7 +22,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-price">
-            $${moneyFormate(product.priceCents)}
+            $${moneyFormate(product.id)}
           </div>
 
           <div class="product-quantity-container">
@@ -85,6 +85,7 @@ function addToCartFun(productId) {
       quantity: cartCountValue,
     });
   }
+  saveCartItemInLocal();
 }
 
 document.querySelector(".products-grid").innerHTML = `${productHtml}`;
