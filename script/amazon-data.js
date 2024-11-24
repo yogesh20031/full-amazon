@@ -1,4 +1,5 @@
 import { cart, saveCartItemInLocal } from "../data/cart.js";
+import { deliveryOptions } from "../data/delevary-option.js";
 import { products } from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
 let productHtml = "";
@@ -22,7 +23,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-price">
-            $${moneyFormate(product.id)}
+            $${moneyFormate(product.priceCents)}
           </div>
 
           <div class="product-quantity-container">
@@ -70,7 +71,7 @@ function addToCartFun(productId) {
     document.querySelector(`.js-quantity-selector-${productId}`).value
   );
   cartCount += cartCountValue;
-  document.querySelector(".cart-quantity").innerHTML = cartCount;
+  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
 
   let checkItemPresence = false;
   cart.forEach((cartItem) => {
@@ -83,13 +84,23 @@ function addToCartFun(productId) {
     cart.push({
       productId: productId,
       quantity: cartCountValue,
+      deliveryOptionsId: "1",
     });
   }
   saveCartItemInLocal();
+  saveCartCountInLocal();
 }
 
+export function saveCartCountInLocal() {
+  localStorage.setItem("cartCount", JSON.stringify(cartCount));
+}
 document.querySelector(".products-grid").innerHTML = `${productHtml}`;
-let cartCount = 0;
+let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+if (cartCount === -0) {
+  document.querySelector(".js-cart-quantity").innerHTML = ``;
+} else {
+  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
+}
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     popUpAddedMessage(button);
