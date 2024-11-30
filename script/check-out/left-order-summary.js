@@ -13,6 +13,7 @@ import {
   getDeliveryOptionId,
 } from "../../data/delevary-option.js";
 import { randerPayment } from "./right-payment-summary.js";
+import { deliveryDateFormat } from "../utils/delivery-date.js";
 export function randerOrderSummary() {
   let cartHtml = "";
   cart.forEach((cartItem) => {
@@ -20,10 +21,7 @@ export function randerOrderSummary() {
     let matchingProduct = getProductId(productId);
     const deliveryOptionId = cartItem.deliveryOptionsId;
     let deliveryOption = getDeliveryOptionId(deliveryOptionId);
-
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDate, "days");
-    const dateString = deliveryDate.format("dddd , MMMM D");
+    const dateString = deliveryDateFormat(deliveryOption.deliveryDate);
 
     cartHtml += `<div class="cart-item-container js-cart-item-container${productId}">
               <div class="delivery-date">
@@ -47,7 +45,8 @@ export function randerOrderSummary() {
                         cartItem.quantity
                       }</span>
                     </span>
-                    <span class="update-quantity-link link-primary">
+                    <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${productId}"
+                    data-product-qunatity="${cartItem.quantity}">
                       Update
                     </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id=${productId}>
@@ -69,9 +68,7 @@ export function randerOrderSummary() {
   function deliveryOptionsHTML(matchingProduct, cartItem) {
     let html = ``;
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      const deliveryDate = today.add(deliveryOption.deliveryDate, "days");
-      const dateString = deliveryDate.format("dddd , MMMM D");
+      const dateString = deliveryDateFormat(deliveryOption.deliveryDate);
       let priceString =
         deliveryOption.priceCents === 0
           ? "FREE"
@@ -122,4 +119,10 @@ export function randerOrderSummary() {
       randerPayment();
     });
   });
+  // document.querySelectorAll(".js-update-quantity-link").forEach((update) => {
+  //   update.addEventListener("click", () => {
+  //     const {productId,productQuantity}= update.dataset;
+  //     update.innerHTML = `<input type="number" class="update-quantity-input" >`;
+  //   });
+  // });
 }
