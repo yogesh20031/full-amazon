@@ -31,6 +31,7 @@ export function reduceCartCount(productId) {
   });
 }
 
+
 export function deleteProductFromCart(productId) {
   let newCart = [];
   cart.forEach((cartItem) => {
