@@ -1,30 +1,26 @@
-import { cart,deleteProductFromCart,
-    reduceCartCount,
-    updateCheckOut,
-    updateDeliveryOption, } from "../../data/cart.js";
-
-import { products } from '../../data/products.js';
+import {
+  cart,
+  deleteProductFromCart,
+  reduceCartCount,
+  updateCheckOut,
+  updateDeliveryOption,
+} from "../../data/cart.js";
+import { getProductId, products } from "../../data/products.js";
 import { moneyFormate } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-import { deliveryOptions } from "../../data/delevary-option.js";
+import {
+  deliveryOptions,
+  getDeliveryOptionId,
+} from "../../data/delevary-option.js";
 import { randerPayment } from "./right-payment-summary.js";
 export function randerOrderSummary() {
   let cartHtml = "";
   cart.forEach((cartItem) => {
     const productId = cartItem.productId;
-    let matchingProduct;
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-      }
-    });
+    let matchingProduct = getProductId(productId);
+    const deliveryOptionId = cartItem.deliveryOptionsId;
+    let deliveryOption = getDeliveryOptionId(deliveryOptionId);
 
-    let deliveryOption;
-    deliveryOptions.forEach((option) => {
-      if (option.id === cartItem.deliveryOptionsId) {
-        deliveryOption = option;
-      }
-    });
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDate, "days");
     const dateString = deliveryDate.format("dddd , MMMM D");

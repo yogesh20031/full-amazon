@@ -1,35 +1,40 @@
 import { cart } from "../../data/cart.js";
-import { products } from "../../data/products.js";
+import { getDeliveryOptionId } from "../../data/delevary-option.js";
+import { getProductId, products } from "../../data/products.js";
 import { moneyFormate } from "../utils/money.js";
 export function randerPayment() {
-    
-  let randerPaymentHtml = ``;
-  let totalBeforeTax;
-  let shippingCharge=400;
+  let paymentSummaryHtml = ``;
+  let totalBeforeTax = 0;
+  let shippingCharge = 0;
+  let itemPrice = 0;
+  let totalPrice = 0;
+  let tax = 0;
   cart.forEach((cartItem) => {
     const productId = cartItem.productId;
     const cartQuantity = cartItem.quantity;
-    let matchingProduct;
-    products.forEach((product) => {
-      if (product.id === productId) {
-        matchingProduct = product;
-        let price = (matchingProduct.priceCents * cartQuantity)+shippingCharge;
-        if (!totalBeforeTax) totalBeforeTax = price;
-        else totalBeforeTax += price;
-      }
-    });
+    let deliveryOptionId = cartItem.deliveryOptionsId;
+    let matchingProduct = getProductId(productId);
+    const deliveryOption = getDeliveryOptionId(deliveryOptionId);
+    let deliveryCharge = deliveryOption.priceCents;
+    shippingCharge += deliveryCharge;
+    itemPrice += matchingProduct.priceCents * cartQuantity;
+    totalBeforeTax = itemPrice + shippingCharge;
+    tax = totalBeforeTax / 10;
+    totalPrice = totalBeforeTax + tax;
   });
   let cartCount = JSON.parse(localStorage.getItem("cartCount"));
-  randerPaymentHtml += ` <div class="payment-summary-title">Order Summary</div>
+  paymentSummaryHtml += ` <div class="payment-summary-title">Order Summary</div>
 
           <div class="payment-summary-row">
             <div>Items (${cartCount}):</div>
-            <div class="payment-summary-money">$42.75</div>
+            <div class="payment-summary-money">$${moneyFormate(itemPrice)}</div>
           </div>
 
           <div class="payment-summary-row">
             <div>Shipping &amp; handling:</div>
-            <div class="payment-summary-money">$4.99</div>
+            <div class="payment-summary-money">$${moneyFormate(
+              shippingCharge
+            )}</div>
           </div>
 
           <div class="payment-summary-row subtotal-row">
@@ -41,16 +46,18 @@ export function randerPayment() {
 
           <div class="payment-summary-row">
             <div>Estimated tax (10%):</div>
-            <div class="payment-summary-money">$4.77</div>
+            <div class="payment-summary-money">$${moneyFormate(tax)}</div>
           </div>
 
           <div class="payment-summary-row total-row">
             <div>Order total:</div>
-            <div class="payment-summary-money">$52.51</div>
+            <div class="payment-summary-money">$${moneyFormate(
+              totalPrice
+            )}</div>
           </div>
 
           <button class="place-order-button button-primary">
             Place your order
           </button>`;
-  document.querySelector(".payment-summary").innerHTML = randerPaymentHtml;
+  document.querySelector(".payment-summary").innerHTML = paymentSummaryHtml;
 }
