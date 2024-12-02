@@ -1,7 +1,13 @@
-import { cart, saveCartItemInLocal } from "../data/cart.js";
+import {
+  cart,
+  saveCartItemInLocal,
+  saveCartCountInLocal,
+  addToCartFun,
+} from "../data/cart.js";
 import { deliveryOptions } from "../data/delevary-option.js";
 import { products } from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
+
 let productHtml = "";
 products.forEach((product) => {
   productHtml += `<div class="product-container">
@@ -66,34 +72,6 @@ function popUpAddedMessage(button) {
   }, 2000);
 }
 
-function addToCartFun(productId) {
-  let cartCountValue = parseInt(
-    document.querySelector(`.js-quantity-selector-${productId}`).value
-  );
-  cartCount += cartCountValue;
-  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
-
-  let checkItemPresence = false;
-  cart.forEach((cartItem) => {
-    if (cartItem.productId === productId) {
-      cartItem.quantity += cartCountValue;
-      checkItemPresence = true;
-    }
-  });
-  if (!checkItemPresence) {
-    cart.push({
-      productId: productId,
-      quantity: cartCountValue,
-      deliveryOptionsId: "1",
-    });
-  }
-  saveCartItemInLocal();
-  saveCartCountInLocal();
-}
-
-export function saveCartCountInLocal() {
-  localStorage.setItem("cartCount", JSON.stringify(cartCount));
-}
 document.querySelector(".products-grid").innerHTML = `${productHtml}`;
 let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
 if (cartCount === -0) {
@@ -105,6 +83,7 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     popUpAddedMessage(button);
     const productId = button.dataset.productId;
-    addToCartFun(productId);
+    cartCount = addToCartFun(productId, cartCount);
+    saveCartCountInLocal(cartCount);
   });
 });
