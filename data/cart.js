@@ -26,9 +26,9 @@ export function getCartCountFromInput(productId) {
   );
   return cartCountValue;
 }
-export function addToCartFun(productId, cartCount) {
-
-  let  cartCountValue = getCartCountFromInput(productId);
+export function addToCartFun(productId) {
+  let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+  let cartCountValue = getCartCountFromInput(productId);
   cartCount += cartCountValue;
   renderCartCountInCartIcon(cartCount);
   let checkItemPresence = false;

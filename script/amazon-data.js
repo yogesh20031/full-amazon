@@ -84,7 +84,7 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     popUpAddedMessage(button);
     const productId = button.dataset.productId;
-    cartCount = addToCartFun(productId, cartCount);
+    cartCount = addToCartFun(productId);
     saveCartCountInLocal(cartCount);
   });
 });
