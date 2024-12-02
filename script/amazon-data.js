@@ -3,6 +3,7 @@ import {
   saveCartItemInLocal,
   saveCartCountInLocal,
   addToCartFun,
+  renderCartCountInCartIcon,
 } from "../data/cart.js";
 import { deliveryOptions } from "../data/delevary-option.js";
 import { products } from "../data/products.js";
@@ -74,10 +75,10 @@ function popUpAddedMessage(button) {
 
 document.querySelector(".products-grid").innerHTML = `${productHtml}`;
 let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
-if (cartCount === -0) {
+if (cartCount === 0) {
   document.querySelector(".js-cart-quantity").innerHTML = ``;
 } else {
-  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
+  renderCartCountInCartIcon(cartCount);
 }
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {

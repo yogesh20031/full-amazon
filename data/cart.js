@@ -16,13 +16,21 @@ if (!cart) {
   ];
 }
 
-export function addToCartFun(productId, cartCount) {
+export function renderCartCountInCartIcon(cartCount) {
+  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
+}
+
+export function getCartCountFromInput(productId) {
   let cartCountValue = parseInt(
     document.querySelector(`.js-quantity-selector-${productId}`).value
   );
-  cartCount += cartCountValue;
-  document.querySelector(".js-cart-quantity").innerHTML = cartCount;
+  return cartCountValue;
+}
+export function addToCartFun(productId, cartCount) {
 
+  let  cartCountValue = getCartCountFromInput(productId);
+  cartCount += cartCountValue;
+  renderCartCountInCartIcon(cartCount);
   let checkItemPresence = false;
   cart.forEach((cartItem) => {
     if (cartItem.productId === productId) {
@@ -42,6 +50,10 @@ export function addToCartFun(productId, cartCount) {
   return cartCount;
 }
 
+export function saveCartCountInLocal(cartCount) {
+  localStorage.setItem("cartCount", JSON.stringify(cartCount));
+}
+
 export function saveCartItemInLocal() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -55,9 +67,6 @@ export function reduceCartCount(productId) {
       localStorage.setItem("cartCount", JSON.stringify(cartCount));
     }
   });
-}
-export function saveCartCountInLocal(cartCount) {
-  localStorage.setItem("cartCount", JSON.stringify(cartCount));
 }
 
 export function deleteProductFromCart(productId) {
@@ -85,13 +94,3 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
   matchingProduct.deliveryOptionsId = deliveryOptionId;
   saveCartItemInLocal();
 }
-
-// export function updateDeliveryOption(productId, deliveryOptionId) {
-//   const cartItem = cart.find((item) => item.productId === productId);
-//   if (cartItem) {
-//     cartItem.deliveryOptionsId = deliveryOptionId;
-//     saveCartItemInLocal();
-//   } else {
-//     console.error(`No cart item found for productId: ${productId}`);
-//   }
-// }
