@@ -47,7 +47,6 @@ export function addToCartFun(productId) {
   }
   saveCartItemInLocal();
   saveCartCountInLocal(cartCount);
-  return cartCount;
 }
 
 export function saveCartCountInLocal(cartCount) {
@@ -57,9 +56,9 @@ export function saveCartCountInLocal(cartCount) {
 export function saveCartItemInLocal() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-let cartCount;
+
 export function reduceCartCount(productId) {
-  cartCount = JSON.parse(localStorage.getItem("cartCount"));
+  let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
   cart.forEach((cartItem) => {
     if (cartItem.productId === productId) {
       cartCount -= cartItem.quantity;
@@ -80,7 +79,7 @@ export function deleteProductFromCart(productId) {
   saveCartItemInLocal();
 }
 export function updateCheckOut() {
-  cartCount = JSON.parse(localStorage.getItem("cartCount"));
+  let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
   document.querySelector(".js-return-to-home-link").innerHTML = cartCount;
 }
 
