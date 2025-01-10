@@ -37,7 +37,7 @@ export function randerOrderSummary() {
                     ${matchingProduct.name}
                   </div>
                   <div class="product-price">
-                    $${moneyFormate(matchingProduct.priceCents)}
+                    ${matchingProduct.getPrice()}
                   </div>
                   <div class="product-quantity">
                     <span>
