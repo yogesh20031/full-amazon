@@ -4,6 +4,7 @@ import {
   reduceCartCount,
   updateCheckOut,
   updateDeliveryOption,
+  uptadeCartCount,
 } from "../../data/cart.js";
 import { getProductId, products } from "../../data/products.js";
 import { moneyFormate } from "../utils/money.js";
@@ -41,12 +42,12 @@ export function randerOrderSummary() {
                   </div>
                   <div class="product-quantity">
                     <span>
-                      Quantity: <span class="quantity-label">${
-                        cartItem.quantity
-                      }</span>
+                      Quantity: <span class="quantity-label quantity-label-${productId}">${
+      cartItem.quantity
+    }</span>
                     </span>
-                    <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${productId}"
-                    data-product-qunatity="${cartItem.quantity}">
+                    <span class="update-quantity-link link-primary js-update-quantity-link update-quantity-link-${productId}" data-product-id="${productId}"
+                    data-product-quantity="${cartItem.quantity}">
                       Update
                     </span>
                     <span class="delete-quantity-link link-primary js-delete-link" data-product-id=${productId}>
@@ -100,16 +101,74 @@ export function randerOrderSummary() {
   document.querySelector(".js-order-summary").innerHTML = cartHtml;
   updateCheckOut();
 
+  //update the cart item
+  document.querySelectorAll(".js-update-quantity-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      const productId = link.dataset.productId;
+      const productQuantity = link.dataset.productQuantity;
+      if (link.querySelector("input")) return;
+      link.innerHTML = `<input type="number" class="input-update-cart-${productId}"
+      value="${productQuantity}" 
+      style="width: 50px;
+      min="1" >
+      <span class="cart-quantity-save-${productId}" >save</span>`;
+      document.querySelector(`.quantity-label-${productId}`).innerHTML = ``;
+      document
+        .querySelector(`.cart-quantity-save-${productId}`)
+        .addEventListener("click", () => {
+          saveInputCartItem(
+            document.querySelector(`.input-update-cart-${productId}`).value,
+            productId,
+            productQuantity
+          );
+        });
+    });
+  });
+
+  //save the update value
+  function saveInputCartItem(newCatrQuantity, productId, oldCartQuantity) {
+    newCatrQuantity = parseInt(newCatrQuantity);
+    const updateLink = document.querySelector(
+      `.update-quantity-link-${productId}`
+    );
+   
+    document.querySelector(
+      `.quantity-label-${productId}`
+    ).innerHTML = `${newCatrQuantity}`;
+    if (newCatrQuantity < 0) alert("not valid number");
+    else if (newCatrQuantity === 0) deleteTheItem(productId);
+    else {
+      const updateLink = document.querySelector(
+        `.update-quantity-link-${productId}`
+      );
+      if (updateLink) {
+        updateLink.innerHTML = `Update`;
+        updateLink.dataset.productQuantity = newCatrQuantity;
+        console.log(true);
+      }
+      cart.forEach((cartItem) => {
+        if (cartItem.productId === productId) {
+          cartItem.quantity = newCatrQuantity;
+        }
+      });
+      uptadeCartCount(oldCartQuantity, newCatrQuantity);
+    }
+  }
+
   document.querySelectorAll(".js-delete-link").forEach((link) => {
     link.addEventListener("click", () => {
       const productId = link.dataset.productId;
-      reduceCartCount(productId);
-      deleteProductFromCart(productId);
-      updateCheckOut();
-      document.querySelector(`.js-cart-item-container${productId}`).remove();
-      randerPayment();
+      deleteTheItem(productId);
     });
   });
+
+  function deleteTheItem(productId) {
+    reduceCartCount(productId);
+    deleteProductFromCart(productId);
+    updateCheckOut();
+    document.querySelector(`.js-cart-item-container${productId}`).remove();
+    randerPayment();
+  }
 
   document.querySelectorAll(".js-delivery-option").forEach((element) => {
     element.addEventListener("click", () => {

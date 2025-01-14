@@ -71,6 +71,13 @@ export function reduceCartCount(productId) {
   });
 }
 
+export function uptadeCartCount(oldCartQuantity, newCatrQuantity) {
+  let changeCartQuantity = newCatrQuantity - oldCartQuantity;
+  let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+  cartCount = cartCount + changeCartQuantity;
+  localStorage.setItem("cartCount", JSON.stringify(cartCount));
+}
+
 export function deleteProductFromCart(productId) {
   let newCart = [];
   cart.forEach((cartItem) => {
