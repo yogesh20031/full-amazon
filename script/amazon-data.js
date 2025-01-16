@@ -6,11 +6,13 @@ import {
   renderCartCountInCartIcon,
 } from "../data/cart.js";
 import { deliveryOptions } from "../data/delevary-option.js";
-import { products, loadProducts } from "../data/products.js";
+import { products,/* loadProducts*/loadProductsFetch } from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
 
-loadProducts(renderProductGrid);
-
+// loadProducts(renderProductGrid);
+loadProductsFetch().then(()=>{
+  renderProductGrid();
+})
 function renderProductGrid() {
   let productHtml = "";
   products.forEach((product) => {

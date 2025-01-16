@@ -51,38 +51,34 @@ class Clothing extends Product {
 
 export let products = [];
 
-export function loadProductsFetch() {
-  const promise=fetch("https://supersimplebackend.dev/products")
-    .then((response) => {
-      return response.json();
-    })
-    .then((productData) => {
-      products = productData.map((productDetails) => {
-        if (productDetails.type === "clothing") {
-          return new Clothing(productDetails);
-        }
-        return new Product(productDetails);
-      });
-      console.log("load products");
-     
-    });
-    return promise;
-}
-export function loadProducts(fun) {
-  const xhr = new XMLHttpRequest();
-  xhr.addEventListener("load", () => {
-    products = JSON.parse(xhr.response).map((productDetails) => {
-      if (productDetails.type === "clothing") {
-        return new Clothing(productDetails);
-      }
-      return new Product(productDetails);
-    });
-    console.log("load products");
-    fun();
+export async function loadProductsFetch() {
+  const response = await fetch("https://supersimplebackend.dev/products");
+  const productData = await response.json();
+  products = productData.map((productDetails) => {
+    if (productDetails.type === "clothing") {
+      return new Clothing(productDetails);
+    }
+    return new Product(productDetails);
   });
-  xhr.open("GET", "https://supersimplebackend.dev/products");
-  xhr.send();
+  console.log("load products");
+
+  return response;
 }
+// export function loadProducts(fun) {
+//   const xhr = new XMLHttpRequest();
+//   xhr.addEventListener("load", () => {
+//     products = JSON.parse(xhr.response).map((productDetails) => {
+//       if (productDetails.type === "clothing") {
+//         return new Clothing(productDetails);
+//       }
+//       return new Product(productDetails);
+//     });
+//     console.log("load products");
+//     fun();
+//   });
+//   xhr.open("GET", "https://supersimplebackend.dev/products");
+//   xhr.send();
+// }
 // export const products = [
 //   {
 //     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
