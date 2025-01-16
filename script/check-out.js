@@ -4,12 +4,16 @@ import { randerPayment } from "./check-out/right-payment-summary.js";
 // import "../data/backend.js";
 import { /*oadProducts*/ loadProductsFetch } from "../data/products.js";
 
-loadProductsFetch().then(() => {
+/*loadProductsFetch().then(() => {
   randerOrderSummary();
   randerPayment();
-});
+});*/
 async function loadCheck() {
-  await loadProductsFetch();
+  try {
+    await loadProductsFetch();
+  } catch (error) {
+    console.log(`${error}.Please try again!`);
+  }
   randerOrderSummary();
   randerPayment();
 }

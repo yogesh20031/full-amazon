@@ -6,13 +6,20 @@ import {
   renderCartCountInCartIcon,
 } from "../data/cart.js";
 import { deliveryOptions } from "../data/delevary-option.js";
-import { products,/* loadProducts*/loadProductsFetch } from "../data/products.js";
+import {
+  products,
+  /* loadProducts*/ loadProductsFetch,
+} from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
 
 // loadProducts(renderProductGrid);
-loadProductsFetch().then(()=>{
-  renderProductGrid();
-})
+loadProductsFetch()
+  .then(() => {
+    renderProductGrid();
+  })
+  .catch((error) => {
+    console.log(`${error}.Please try again!`);
+  });
 function renderProductGrid() {
   let productHtml = "";
   products.forEach((product) => {
