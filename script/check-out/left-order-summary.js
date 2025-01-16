@@ -138,13 +138,11 @@ export function randerOrderSummary() {
     if (newCatrQuantity < 0) alert("not valid number");
     else if (newCatrQuantity === 0) deleteTheItem(productId);
     else {
-      const updateLink = document.querySelector(
-        `.update-quantity-link-${productId}`
-      );
+    
       if (updateLink) {
         updateLink.innerHTML = `Update`;
         updateLink.dataset.productQuantity = newCatrQuantity;
-        console.log(true);
+        console.log("true");
       }
       cart.forEach((cartItem) => {
         if (cartItem.productId === productId) {
