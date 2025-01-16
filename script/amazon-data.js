@@ -6,12 +6,15 @@ import {
   renderCartCountInCartIcon,
 } from "../data/cart.js";
 import { deliveryOptions } from "../data/delevary-option.js";
-import { products } from "../data/products.js";
+import { products, loadProducts } from "../data/products.js";
 import { moneyFormate } from "./utils/money.js";
 
-let productHtml = "";
-products.forEach((product) => {
-  productHtml += `<div class="product-container">
+loadProducts(renderProductGrid);
+
+function renderProductGrid() {
+  let productHtml = "";
+  products.forEach((product) => {
+    productHtml += `<div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
               src="${product.image}">
@@ -61,31 +64,32 @@ products.forEach((product) => {
             Add to Cart
           </button>
         </div>`;
-});
-
-function popUpAddedMessage(button) {
-  let setTime = clearTimeout();
-  const productContainer = button.closest(".product-container");
-  const addedToCartElement = productContainer.querySelector(".added-to-cart");
-  addedToCartElement.classList.add("added-to-cart-opacity");
-  setTime = setTimeout(() => {
-    addedToCartElement.classList.remove("added-to-cart-opacity");
-  }, 2000);
-}
-
-document.querySelector(".products-grid").innerHTML = `${productHtml}`;
-let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
-if (cartCount === 0) {
-  document.querySelector(".js-cart-quantity").innerHTML = ``;
-} else {
-  renderCartCountInCartIcon(cartCount);
-}
-document.querySelectorAll(".js-add-to-cart").forEach((button) => {
-  button.addEventListener("click", () => {
-    popUpAddedMessage(button);
-    const productId = button.dataset.productId;
-    addToCartFun(productId);
-    cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
-    renderCartCountInCartIcon(cartCount);
   });
-});
+
+  function popUpAddedMessage(button) {
+    let setTime = clearTimeout();
+    const productContainer = button.closest(".product-container");
+    const addedToCartElement = productContainer.querySelector(".added-to-cart");
+    addedToCartElement.classList.add("added-to-cart-opacity");
+    setTime = setTimeout(() => {
+      addedToCartElement.classList.remove("added-to-cart-opacity");
+    }, 2000);
+  }
+
+  document.querySelector(".products-grid").innerHTML = `${productHtml}`;
+  let cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+  if (cartCount === 0) {
+    document.querySelector(".js-cart-quantity").innerHTML = ``;
+  } else {
+    renderCartCountInCartIcon(cartCount);
+  }
+  document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+    button.addEventListener("click", () => {
+      popUpAddedMessage(button);
+      const productId = button.dataset.productId;
+      addToCartFun(productId);
+      cartCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+      renderCartCountInCartIcon(cartCount);
+    });
+  });
+}
