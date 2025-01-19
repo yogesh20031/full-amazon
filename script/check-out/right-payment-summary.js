@@ -2,7 +2,7 @@ import { cart } from "../../data/cart.js";
 import { getDeliveryOptionId } from "../../data/delevary-option.js";
 import { getProductId, products } from "../../data/products.js";
 import { moneyFormate } from "../utils/money.js";
-import { addOrder } from "../../data/order.js";
+import { addOrder } from "../../data/order-data.js";
 export function randerPayment() {
   let paymentSummaryHtml = ``;
   let totalBeforeTax = 0;
@@ -82,5 +82,6 @@ export function randerPayment() {
       }
 
       window.location.href = "orders.html";
+      
     });
 }
